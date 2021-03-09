@@ -1,0 +1,15 @@
+version: 1.0.1
+
+spring:
+  application:
+    name: dvd-rental-store
+  datasource:
+    url: jdbc:postgresql://sakila-img:5432/sakila?ApplicationName=rest-api
+    username: sakila
+    password: sakila
+    validation-query: SELECT 1
+    platform: postgresql
+    hikari:
+      minimumIdle: 1
+      maximumPoolSize: 5
+      idleTimeout: 30000

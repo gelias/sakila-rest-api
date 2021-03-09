@@ -1,0 +1,79 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.2.0.RELEASE")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+defaultTasks 'clean', 'test', 'build', 'renameJar'
+
+group 'sakila-api-rest'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.11
+targetCompatibility = 1.11
+
+bootJar {
+    baseName = rootProject.name
+    version =  project.version
+}
+
+def environment = project.hasProperty('env') ? project.property('env') : 'local'
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
+}
+
+dependencies {
+    developmentOnly 'org.springframework.boot:spring-boot-devtools:2.2.0.RELEASE'
+    compile 'org.springframework.boot:spring-boot-starter-web:2.2.0.RELEASE'
+    compile 'org.springframework.boot:spring-boot-starter-actuator:2.2.0.RELEASE'
+    compile 'org.springframework.boot:spring-boot-starter-jdbc:2.2.0.RELEASE'
+    compile 'org.postgresql:postgresql:42.2.12'
+
+    compile('io.micrometer:micrometer-registry-prometheus:1.1.0')
+    compile('com.google.code.gson:gson:2.8.5')
+    compile 'log4j:log4j:1.2.17'
+
+    compile 'org.springdoc:springdoc-openapi-ui:1.5.4'
+    
+    compile 'org.projectlombok:lombok:1.18.16'
+
+    testCompile 'junit:junit:4.11'
+    testCompile 'org.mockito:mockito-all:1.9.5'
+    testCompile('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+}
+
+task renameJar {
+    doLast {
+        copy {
+            from "build/libs/${rootProject.name}-${version}.jar"
+            into 'build/libs/'
+            rename { String fileName ->
+                fileName.replace("${rootProject.name}-${version}.jar", 'store.jar')
+            }
+        }
+    }
+}
+
+bootRun {
+    systemProperty "spring.profiles.active", environment
+    println "Using environment: ${environment}"
+}

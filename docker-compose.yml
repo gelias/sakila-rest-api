@@ -1,0 +1,14 @@
+version: '3.4'
+services:
+  sakila-img:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile-Sakila
+    ports:
+      - 5432:5432
+  store:
+    build: .
+    depends_on:
+      - sakila-img
+    ports:
+      - 8080:8080
