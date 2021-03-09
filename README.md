@@ -94,6 +94,7 @@ GET /v1/rental/overdue
 
 ## Next Steps
 
+* CI support. [Travis](http://travis-ci.org/) and [CircleCI](https://circleci.com/)
 * Integration testing using
 * [Quarkus](https://quarkus.io/) support
 * [UBI](https://developers.redhat.com/products/rhel/ubi) container
